@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+  "name": "9GAG Downloader",
+  "version": "0.1",
+  "content_scripts": [
+    {
+      "matches": ["*://*.9gag.com/*"],
+      "js": [
+        "FileSaver.min.js",
+        "jquery-3.4.1.min.js",
+        "content.js"
+      ]
+    }
+  ]
+}
