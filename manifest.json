@@ -6,7 +6,6 @@
     {
       "matches": ["*://*.9gag.com/*"],
       "js": [
-        "FileSaver.min.js",
         "jquery-3.4.1.min.js",
         "content.js"
       ]
