@@ -21,11 +21,9 @@ $(document).ready(function () {
 });
 
 const template = `
-<ul class="btn-vote right download" style="color: green;">
+<ul class="btn-vote right download">
     <li>
-        <a class="down" href="#">
-            Download
-        </a>
+        <a href="javascript:void(0);" rel="nofollow"  class="down">Download</a>
     </li>
 </ul>`;
 
@@ -37,15 +35,10 @@ let obs = new MutationObserver(function (mutations, observer) {
         }
     });
 });
-obs.observe($('#list-view-2').get(0), {
+obs.observe(document.getElementById('list-view-2'), {
     childList: true
 });
 
 function forceDownload(url, fileName) {
-    let a = document.createElement('a');
-    a.href = url;
-    a.download = fileName;
-    a.target = "_blank";
-    a.click();
-    a.remove();
+    chrome.runtime.sendMessage({url: url, filename: fileName});
 }

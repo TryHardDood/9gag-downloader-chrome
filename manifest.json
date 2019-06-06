@@ -1,10 +1,19 @@
 {
   "manifest_version": 2,
   "name": "9GAG Downloader",
-  "version": "0.1",
+  "description": "A simple chrome extension to download posts from 9GAG",
+  "version": "0.2",
+  "permissions": [
+    "downloads"
+  ],
+  "background": {
+    "page": "background.html"
+  },
   "content_scripts": [
     {
-      "matches": ["*://*.9gag.com/*"],
+      "matches": [
+        "*://*.9gag.com/*"
+      ],
       "js": [
         "jquery-3.4.1.min.js",
         "content.js"
