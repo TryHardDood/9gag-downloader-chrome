@@ -1,25 +1,3 @@
-$(document).ready(function () {
-    $('article div.in-list-view').each((index, value) => {
-        if ($(value, 'div.post-afterbar-a').find('ul.download').length === 0) {
-            $(value, 'div.post-afterbar-a').append(template);
-        }
-    });
-
-    $(document).on('click', '.download', function (e) {
-        e.preventDefault();
-
-        const post = $(this).closest('article').find('a.badge-track')[1];
-        let url;
-        if ($(post).find('img').length > 0) {
-            url = $(post).find('img').get(0).src;
-            forceDownload(url, url.substring(url.lastIndexOf('/') + 1))
-        } else if ($(post).find('video').length > 0) {
-            url = $(post).find('video').find('source[type="video/mp4"]').get(0).src;
-            forceDownload(url, url.substring(url.lastIndexOf('/') + 1))
-        }
-    });
-});
-
 const template = `
 <ul class="btn-vote right download">
     <li>
@@ -28,17 +6,49 @@ const template = `
 </ul>`;
 
 MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
-let obs = new MutationObserver(function (mutations, observer) {
-    $('article div.in-list-view').each((index, value) => {
-        if ($(value, 'div.post-afterbar-a').find('ul.download').length === 0) {
-            $(value, 'div.post-afterbar-a').append(template);
+let obs = new MutationObserver(function () {
+    document.querySelectorAll('article div.in-list-view').forEach((value) => {
+        if (!value.querySelector('ul.download')) {
+            value.insertAdjacentHTML('beforeend', template)
         }
     });
 });
+
 obs.observe(document.getElementById('list-view-2'), {
     childList: true
 });
 
+ready(function () {
+    document.querySelectorAll('article div.in-list-view').forEach((value) => {
+        if (!value.querySelector('ul.download')) {
+            value.insertAdjacentHTML('beforeend', template)
+        }
+    });
+});
+
+document.addEventListener("click", function (event) {
+    if (!event.target || !event.target.classList.contains('down')) return;
+
+    event.preventDefault();
+
+    const post = event.target.closest('article').querySelectorAll('a.badge-track')[1];
+    let url;
+    if (post.querySelector('img')) {
+        url = post.querySelector('img').src
+    } else if (post.querySelector('video')) {
+        url = post.querySelector('video').querySelector('source[type="video/mp4"]').src;
+    }
+    forceDownload(url, url.substring(url.lastIndexOf('/') + 1))
+});
+
 function forceDownload(url, fileName) {
-    chrome.runtime.sendMessage({url: url, filename: fileName});
+    chrome.runtime.sendMessage({ url: url, filename: fileName });
+}
+
+function ready(fn) {
+    if (document.readyState != 'loading') {
+        fn();
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
 }
